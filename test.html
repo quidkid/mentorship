@@ -1,0 +1,32 @@
+<html>
+  <head>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js" ></script>
+    <script>
+      $( document ).ready(function(){
+        var baseurl = "http://api.penncoursereview.com/v1/";
+        var token = "?token=N6eYUxRT1ulnSlXL2Dspm2YHcbFIU2";
+        $("#button").click(function(){
+          $("#result").html("");
+          //search dept
+          var dept = $("#dept").val();
+          $.getJSON(baseurl + "depts/" + dept + token, function(response) {
+            console.log(response.result);
+            var courses = response.result.coursehistories;
+            $.each(courses, function(i, course){
+              $("#result").append(course.name + "<br>")
+            }); 
+          })
+        });
+      })
+    </script>
+  </head>
+  <body>
+      Dept: <input type="text" id="dept">
+    <input type="submit" id="button" value="Submit">  
+    <div id="result">
+    </div>
+  </body
+</html>
+
+
+
