@@ -1,0 +1,47 @@
+<html>
+<head>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js" ></script>
+    <script>
+    
+ 	$( document ).ready(function(){
+
+        var baseurl = "http://api.penncoursereview.com/v1/";
+        var token = "?token=N6eYUxRT1ulnSlXL2Dspm2YHcbFIU2";
+         $.getJSON(baseurl + "depts/" + token, function(response) {
+            var array = response.result.values;
+            for (var i=0;i<array.length;i++)
+            { 
+                $("#deptname").append('<option value="'+ array[i].id + '">' + array[i].id + '</option>'); 
+               
+            }
+            
+        
+		});
+        $("#deptname").change(function(){
+            var dept = $('#deptname option:selected')[0].innerHTML;
+            $('#courses').empty(); //clears courses
+
+            $.getJSON(baseurl + "depts/" + dept + token, function(response) {
+                console.log(response.result);
+                var courses = response.result.coursehistories;
+                for (var i=0; i<courses.length; i++){ 
+                //iterating through the courses of the dept
+                     $("#courses").append('<option value="'+ courses[i].name + '">' + courses[i].name + '</option>');
+                }
+            
+            })
+        })
+
+
+     })
+    </script>
+
+</head>
+<body>
+    <select id = "deptname">
+
+    </select>
+    <select id = "courses">
+    </select>
+</body>
+</html>
