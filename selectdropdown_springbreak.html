@@ -30,9 +30,18 @@
                 //iterating through the courses of the dept
                      $("#courses").append('<option value="'+ courses[i].name + '">' + courses[i].name + '</option>');
                 }
-            
+                
+            var id = response.result.coursehistories.id;
+
+
+             $.getJSON(baseurl + "courses/" + id + "/reviews" + token; function(response) {
+                console.log()
+             }
+
+
             })
         })
+
 
 
      })
