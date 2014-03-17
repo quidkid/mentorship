@@ -4,28 +4,40 @@
     <script>
     
  	$( document ).ready(function(){
-
+	
+	// the main url for penn coursereview api
         var baseurl = "http://api.penncoursereview.com/v1/";
+	// the suffix for the api. 
+	// now, request urls can be easily constructed with baseurl + "/stuff/place/whatever" + token
         var token = "?token=N6eYUxRT1ulnSlXL2Dspm2YHcbFIU2";
-         $.getJSON(baseurl + "depts/" + token, function(response) {
+
+	//get json takes a request url, and a function that takes in a response parameter
+        //we figured out that we wanted to access "depts/" by looking at the penncoursereview api 
+	$.getJSON(baseurl + "depts/" + token, function(response) {
+	    // this stuff will be executed after we have received a response.
+	    //found that an array of classes was stored in response.result.values by logging it to console and looking at it in chrome
             var array = response.result.values;
-            for (var i=0;i<array.length;i++)
+            //iterate through the array, putting each course id in an option tag, and adding it to our select element
+	    for (var i=0;i<array.length;i++)
             { 
                 // iterating all the depts at Penn
                 $("#deptname").append('<option value="'+ array[i].id + '">' + array[i].id + '</option>'); 
-               
-            }
-            
-        
-		});
-        $("#deptname").change(function(){
-            var dept = $('#deptname option:selected')[0].innerHTML; 
-            //innerHTML is dept name
-            $('#courses').empty(); //clears courses
 
+            }      
+        });
+        //the change function is an event handler that is bound to a jquery object
+        //we put our selector (in this case, the thing with id deptname) in the quotes, and we pass in a function that executes whenever a change (in value) happens
+        $("#deptname").change(function(){ 
+            // figured this out via stack overflow - the option:selected tag finds the option that is inside deptname and is selected. [0] gets the first one of these (because jquery selectors return arrays). and innerHTML is the javascript command for getting the inside stuff. we could also have done $('#deptname option:selected').val() (i think)
+            var dept = $('#deptname option:selected')[0].innerHTML;
+            $('#courses').empty(); //clears courses
+   
+            //get json again, but now with a different url, and a different callback function
             $.getJSON(baseurl + "depts/" + dept + token, function(response) {
                 console.log(response.result);
+		// found out where the array was by using chrome
                 var courses = response.result.coursehistories;
+                //iterate through array
                 for (var i=0; i<courses.length; i++){ 
                 //iterating through the courses of the dept
                      $("#courses").append('<option value="'+ courses[i].name + '">' + courses[i].name + '</option>');
