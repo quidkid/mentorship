@@ -1,0 +1,44 @@
+Hey Isabella,
+
+This is going to be less of a summary, and more of a quick recap / list of things to Google.
+
+Allright - so we started with selectdropdown_springbreak. We noted that the courses change event handler should be separate from the deptname handler, because we dont want the coursehistory getjson call to happen when deptname changes, just when the course dropdown changes.
+
+We also noted that we should query coursehistories, and take the average of all the difficulties. Instead of just taking the average, we kept a counter and a total variable, and incremented total and counter as necessary. This allowed us to handle the situation where some of the difficulties didn't exist.
+
+We talked about sorting. if x is an array, you can sort it with x.sort(). If you want to sort in a way that's non-obvious, you will have to provide a comparison function. This simply is a function that, given 2 things that are to be sorted, returns -1 if the first is smaller, 0, if they are the same, and 1 if the second is bigger. For example, we used
+  results.sort(function(a, b){
+    return a.rDifficulty < b.rDifficulty;
+  })
+
+Next we talked about async. If you are confused on this topic, google "javascript asynchronous requests". Essentially, async allows us to make a request, and do more stuff before the response comes back.
+
+We used a waiting variable to keep track of the number of responses we were still waiting on. The idea was:
+  
+  make an empty array -- var myArray = []
+  for each thing that we have to do 
+    increment waiting
+    make the request
+    --> when the response comes back
+          store the response (in an array or something - you can use myArray.push() )
+          decrement waiting
+          if waiting = 0, we are done - do the processing that you need to do on myArray
+
+Hmm. I don't think there was much else, was there?
+
+Here's what I would recommend your next course of action be: when I choose a department, display the easiest course in that department, and its difficulty (or, better, display all the courses in that department, and their difficulties, sorted by increasing difficulty)
+
+I would do it this way:
+
+  When the department dropdown changes: 
+    get the department. perform a getjson to get all courses in that department
+    when this response comes back:
+      loop through all courses in the response. for each course:
+        send a request for the reviews of this course
+        when this response comes back:
+          compute the average difficulty. store it into an array, along with the coursename
+          **If we are not waiting for any other requests**
+            sort the array. display it
+
+
+Let me know if you have any questions.
