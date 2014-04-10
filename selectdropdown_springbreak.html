@@ -5,6 +5,7 @@
     
  	$( document ).ready(function(){
 
+
         var baseurl = "http://api.penncoursereview.com/v1/";
         var token = "?token=N6eYUxRT1ulnSlXL2Dspm2YHcbFIU2";
          $.getJSON(baseurl + "depts/" + token, function(response) {
@@ -26,6 +27,7 @@
             $.getJSON(baseurl + "depts/" + dept + token, function(response) {
                 console.log(response.result);
                 var courses = response.result.coursehistories;
+                window.courses = courses;
                 for (var i=0; i<courses.length; i++){ 
 
                 //var id = response.result.coursehistories[i].id;
@@ -46,29 +48,34 @@
         $("#courses").change(function(){
             var id = $('#courses option:selected').val();
 
-             $.getJSON(baseurl + "coursehistories/" + id + "/reviews" + token, function(response) {
-                var total = 0;  
-                var count = 0;
-                for (var i = 0; i < response.result.values.length; i++) {
-                    var score = response.result.values[i].ratings.rDifficulty;
-                    if (score != undefined) {
-                        total = total + parseFloat(score);
-                        count++;
-                    //console.log("rating " + response.result.values[i].ratings.rDifficulty);
-                    }
-                }
-                console.log(total);
-                console.log(response.result.values.length);
-                var difficulty = total / count;
+            $.getJSON(baseurl + "coursehistories/" + id + "/reviews" + token, calculateScore);
 
-
-               console.log(difficulty);
-             });
+            console.log("out of the getjson histories block");
         })
 
 
 
      })
+
+    var calculateScore = function(response) {
+        console.log("response received from coursehistories");
+        var total = 0;  
+        var count = 0;
+        for (var i = 0; i < response.result.values.length; i++) {
+            var score = response.result.values[i].ratings.rDifficulty;
+            if (score != undefined) {
+                total = total + parseFloat(score);
+                count++;
+            //console.log("rating " + response.result.values[i].ratings.rDifficulty);
+            }
+        }
+        console.log(total);
+        console.log(response.result.values.length);
+        var difficulty = total / count;
+
+
+       console.log(difficulty);
+     }
     </script>
 
 </head>
