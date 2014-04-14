@@ -16,9 +16,11 @@ function getResult (keyword, callBack) {
 
 
 $( document ).ready(function(){
+  var allDepts;
   // getResult is taking in a "depts" keyword to built the dept request url
   // 
   getResult ("depts", function (result) {
+    allDepts = result.values;
    	for (var i = 0; i < result.values.length; i++)
     {
       if (result.values[i].name == "")
@@ -44,51 +46,81 @@ $( document ).ready(function(){
     $("#easiest").html("<img src='loader.gif' alt='loading...' width='42' height='42'>");
     // a variable dept stores the selected department value
     var dept = $('#depts option:selected').val();
-    getResult("depts/" + dept, function(result) {
-      // Iterate through the array of coursehistories of the dept
-      
-      var getRatingscounter = 0;
-      var easiestCourses = [];
-      for (var i = 0; i < result.coursehistories.length; i++)
-      {
-        // Using the getRatings function, take in the ith element of the array's name and path and a function that
-        // manipulates parameters of the string name and the reviews object
-        // we had to make getRatings its own function as a workaround of the 
-        //asynchronous issue where the i would change
-        
-        getRatings(result.coursehistories[i].name, result.coursehistories[i].aliases[0],result.coursehistories[i].path, function (name, id, reviews){
-          
-          getRatingscounter++;
-          var total = 0;
-          var counter = 0;
-          for (var k = 0; k < reviews.values.length; k++) {
-            if (reviews.values[k].ratings.rDifficulty != undefined) {
-                var rDifficultyval = parseFloat(reviews.values[k].ratings.rDifficulty);
-                total = total + rDifficultyval;
-                counter = counter + 1;
-            }
 
-
+    // if this is all departments
+    
+    if(dept =="all") {
+      var aCh = [];
+      var counterConcat = 0;
+      for (var i = 0; i < allDepts.length; i++) {
+        getResult(allDepts[i].path, function (result) {
+          aCh = aCh.concat(result.coursehistories);
+          counterConcat++;
+          if (counterConcat == allDepts.length) {
+            processCoursehistories(aCh);
           }
 
-          var avg = total / counter;
-          
-          var course = {name: name, id: id, difficulty: avg};
+        })
 
-          easiestCourses.push(course);
-         
-          if (getRatingscounter == result.coursehistories.length) {
-            finish(easiestCourses);
-           // $("#easiest").html("You should take " + smallestCourse + ", with the course id " + smallestID + " as it has a difficulty of " + smallestAvg);
-          }
-
-          
-        });
       }
-
-      
-    })
+    }
+    // for each department name, get all coursehistories
+    // merge coursehistories together
+    // PCH on that merged list
+    else{
+      // if this is just 1 department
+      getResult("depts/" + dept, function (result){
+        processCoursehistories(result.coursehistories)
+      })
+    }
   })
+  
+  // processCoursehistories takes in a list of coursehistories and processes them
+  function processCoursehistories (coursehistories) {
+    // Iterate through the array of coursehistories of the dept
+    
+    var getRatingscounter = 0;
+    var easiestCourses = [];
+    for (var i = 0; i < coursehistories.length; i++)
+    {
+      // Using the getRatings function, take in the ith element of the array's name and path and a function that
+      // manipulates parameters of the string name and the reviews object
+      // we had to make getRatings its own function as a workaround of the 
+      //asynchronous issue where the i would change
+      
+      getRatings(coursehistories[i].name, coursehistories[i].aliases[0],coursehistories[i].path, function (name, id, reviews){
+        
+        getRatingscounter++;
+        var total = 0;
+        var counter = 0;
+        for (var k = 0; k < reviews.values.length; k++) {
+          if (reviews.values[k].ratings.rDifficulty != undefined) {
+              var rDifficultyval = parseFloat(reviews.values[k].ratings.rDifficulty);
+              total = total + rDifficultyval;
+              counter = counter + 1;
+          }
+
+
+        }
+
+        var avg = total / counter;
+        
+        var course = {name: name, id: id, difficulty: avg};
+
+        easiestCourses.push(course);
+       
+        if (getRatingscounter == coursehistories.length) {
+          finish(easiestCourses);
+         // $("#easiest").html("You should take " + smallestCourse + ", with the course id " + smallestID + " as it has a difficulty of " + smallestAvg);
+        }
+
+        
+      });
+    }
+
+    
+  }
+
   // finish is a function that takes in a list called easiestCourses
   function finish (easiestCourses) {
     // -1 means a is less difficult
@@ -101,10 +133,15 @@ $( document ).ready(function(){
 
       return a.difficulty - b.difficulty});
     console.log(easiestCourses.map(function (a) {return a.difficulty}));
-    var html = "";
+    var html = "<table width='600'><tr><th width='340'>Course Name</th><th width='130'>Difficulty</th><th width= '130'>Course Code</th></tr>";
     for (var i = 0; i < easiestCourses.length; i++) {
-      html = html + "<p>" + easiestCourses[i].name + " " + easiestCourses[i].difficulty + " " + easiestCourses[i].id + "</p>";
+      html = html + "<tr>" + 
+      "<td>" + easiestCourses[i].name + "</td>" + 
+      "<td>" + (easiestCourses[i].difficulty).toFixed(2) + "</td>" + 
+      "<td>" + easiestCourses[i].id + "</td>"
+      + "</tr>";
     }
+    html = html + "</table>";
     $("#easiest").html(html);
   }
 })

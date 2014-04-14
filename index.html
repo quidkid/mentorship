@@ -30,9 +30,19 @@ div.container {
 	font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
 }
 #easiest {
+	overflow-y: auto;
+	overflow-x: hidden;
+	width: 650px;
+	height: 180px;
 	position: relative;
 	text-align: center;
 	margin: 30px;
+}
+
+th, td
+{
+	text-align: center;
+	padding-bottom:5px;
 }
 
 select {
@@ -45,8 +55,10 @@ select {
 	<h1>Penn Easiest Course Finder</h1>
 	<div class = "container">
 	<p><br>Pick a department and we'll find out what's the easiest course!</p>
-	<select id = "depts"></select>
-	
+	<select id = "depts">
+		<option value="all">All Departments</option>
+	</select>
+		
 	<div id = "easiest"></div><br></div>
 </body>
 </html>
