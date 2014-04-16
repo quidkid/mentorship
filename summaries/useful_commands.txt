@@ -1,0 +1,22 @@
+Add a file to be version controlled by git
+git add <filename>
+
+Add all files to be version controlled
+git add *
+
+Commit your changes
+git commit -m "message"
+
+Push your changes
+git push
+
+Pull latest changes from git
+git pull
+
+Change the permissions of a file to be public readable
+chmod 755 <filename>
+
+Change the permissions of all files in this directory
+chmod -R 755 *
+
+So, after pushing your stuff to git, you can ssh into eniac, go to your html/mentorship folder, pull, and chmod everything and you should be good
