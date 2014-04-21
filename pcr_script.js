@@ -43,7 +43,7 @@ $( document ).ready(function(){
    
    // eventually, i want to return the easiest class for a selected department
   $("#depts").change(function(){
-    $("#easiest").html("<img src='loader.gif' alt='loading...' width='42' height='42'>");
+    $("#easiest").html("<img id = 'loading' src='loader.gif' alt='loading...' width='42' height='42'>");
     // a variable dept stores the selected department value
     var dept = $('#depts option:selected').val();
 
@@ -133,17 +133,20 @@ $( document ).ready(function(){
       if (isNaN(bd)) {return -1};
 
       return a.difficulty - b.difficulty});
-    console.log(easiestCourses.map(function (a) {return a.difficulty}));
-    var html = "<table width='600'><tr><th width='340'>Course Name</th><th width='130'>Difficulty</th><th width= '130'>Course Code</th></tr>";
+    var header = "<table width='600' id ='tableheader'><tr><th width='340'>Course Name</th><th width='130'>Difficulty</th><th width= '130'>Course Code</th></tr></table>";
+    var html = "<table width='600' id ='tablecss'>";
     for (var i = 0; i < easiestCourses.length; i++) {
-      html = html + "<tr>" + 
-      "<td class = 'courses'>" + easiestCourses[i].name + "</td>" + 
-      "<td class = 'difficulty'>" + (easiestCourses[i].difficulty).toFixed(2) + "</td>" + 
-      "<td class = 'id'>" + easiestCourses[i].id + "</td>"
+      html = html +  "<tr>" + 
+      "<td width='340' class = 'courses'>" + easiestCourses[i].name + "</td>" + 
+      "<td width='130' class = 'difficulty'>" + (easiestCourses[i].difficulty).toFixed(2) + "</td>" + 
+      "<td width='130' class = 'id'>" + easiestCourses[i].id + "</td>"
       + "</tr>";
     }
     html = html + "</table>";
+ 
     $("#easiest").html(html);
+    $("#headercontainer").html(header);
+     
   }
 })
 
