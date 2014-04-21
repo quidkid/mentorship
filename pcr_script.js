@@ -48,7 +48,7 @@ $( document ).ready(function(){
     var dept = $('#depts option:selected').val();
 
     // if this is all departments
-    
+    /*
     if(dept =="all") {
       var aCh = [];
       var counterConcat = 0;
@@ -64,15 +64,16 @@ $( document ).ready(function(){
 
       }
     }
+    */
     // for each department name, get all coursehistories
     // merge coursehistories together
     // PCH on that merged list
-    else{
+    
       // if this is just 1 department
       getResult("depts/" + dept, function (result){
         processCoursehistories(result.coursehistories)
       })
-    }
+    
   })
   
   // processCoursehistories takes in a list of coursehistories and processes them
@@ -136,9 +137,9 @@ $( document ).ready(function(){
     var html = "<table width='600'><tr><th width='340'>Course Name</th><th width='130'>Difficulty</th><th width= '130'>Course Code</th></tr>";
     for (var i = 0; i < easiestCourses.length; i++) {
       html = html + "<tr>" + 
-      "<td>" + easiestCourses[i].name + "</td>" + 
-      "<td>" + (easiestCourses[i].difficulty).toFixed(2) + "</td>" + 
-      "<td>" + easiestCourses[i].id + "</td>"
+      "<td class = 'courses'>" + easiestCourses[i].name + "</td>" + 
+      "<td class = 'difficulty'>" + (easiestCourses[i].difficulty).toFixed(2) + "</td>" + 
+      "<td class = 'id'>" + easiestCourses[i].id + "</td>"
       + "</tr>";
     }
     html = html + "</table>";
