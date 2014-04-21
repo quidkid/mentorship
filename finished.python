@@ -1,0 +1,40 @@
+# SPOILER ALERT: CONTAINS FINISHED CODE
+
+import requests
+import json
+
+def get (keyword):
+  token = "?token=N6eYUxRT1ulnSlXL2Dspm2YHcbFIU2"
+  r = requests.get("http://api.penncoursereview.com/v1/" + keyword + token)
+  mydecoder = json.JSONDecoder()
+  return mydecoder.decode(r.content)["result"]
+
+allcourses = list()
+
+# get all departments 
+depts = get ("depts")["values"]
+#depts = [{"id":"CIS"}]
+for dept in depts:
+  print dept["id"]
+  #get the courselist for each department
+  courses = get ("depts/" + dept["id"]) ["coursehistories"]
+  for course in courses:
+    #get the ratings for each course
+    reviews = get (course["path"] + "/reviews")["values"]
+    totalDifficulty = 0
+    count = 0
+    for review in reviews:
+      try: 
+        totalDifficulty += float(review["ratings"]["rDifficulty"])
+        count += 1
+      except:
+        ()
+    if count==0:
+      avgDiff = "N/A"
+    else:
+      avgDiff = totalDifficulty/float(count)
+    allcourses.append({"name": course["name"], "id": course["aliases"][0], "diff": avgDiff})
+
+print "sorting"
+allcourses = sorted(allcourses, key=lambda x: x["diff"])
+print allcourses
