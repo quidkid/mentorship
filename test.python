@@ -1,0 +1,13 @@
+import requests
+import json
+
+
+
+def get (keyword):
+  token = "?token=N6eYUxRT1ulnSlXL2Dspm2YHcbFIU2"
+  r = requests.get("http://api.penncoursereview.com/v1/" + keyword + token)
+  mydecoder = json.JSONDecoder()
+  return mydecoder.decode(r.content)["result"]
+
+# main 
+depts = get ("depts")
