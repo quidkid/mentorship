@@ -2,6 +2,7 @@
 <head>
 <link href='http://fonts.googleapis.com/css?family=Chewy' rel='stylesheet' type='text/css'>
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js" ></script>
+<script src="jquery.stickytableheaders.min.js"></script>
 <script src="pcr_script.js" ></script>
 <style>
 h1 {
@@ -39,6 +40,16 @@ div.container {
 	margin: 30px;
 }
 
+#headercontainer{
+	margin-bottom: -32px;
+	margin-left: 35px;
+	margin-top: 25px;
+}
+
+#loading{
+	margin-top: 25px;
+}
+
 th, td
 {
 	text-align: center;
@@ -70,7 +81,7 @@ select {
 	<p><br>Pick a department and we'll find out what's the easiest course!</p>
 	<select id = "depts">
 	</select>
-		
+	<div id = "headercontainer"></div>
 	<div id = "easiest"></div><br></div>
 </body>
 </html>
